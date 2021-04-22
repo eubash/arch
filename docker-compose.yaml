@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+
+  arch:
+    image: eubash/arch-healthcheck:0.0.3
+    build: . #./Dockerfile
+    ports:
+      - "8001:80"
+    restart: always

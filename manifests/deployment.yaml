@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arch-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arch-app
+  template:
+    metadata:
+      labels:
+        app: arch-app
+    spec:
+      containers:
+        - name: arch-healthcheck
+          image: eubash/arch-healthcheck:0.0.3
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              port: 80
+              path: /
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              port: 80
+              path: /health
+            initialDelaySeconds: 10
+            periodSeconds: 5
