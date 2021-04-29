@@ -1,0 +1,14 @@
+nameOverride: mongo-d
+fullnameOverride: mongo-db
+
+auth:
+  username: superuser
+  password: somepass
+  database: someapp
+
+externalAccess:
+  enabled: true
+
+service:
+  type: LoadBalancer
+  externalIPs: [80.11.12.10]

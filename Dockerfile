@@ -4,6 +4,10 @@ WORKDIR /arch-server
 
 COPY ./src .
 
+COPY package.json .
+
+ENV NODE_ENV=development
+
 RUN yarn install
 
 ENTRYPOINT node ./server.js
