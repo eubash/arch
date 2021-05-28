@@ -5,6 +5,9 @@ yarn.lock
 package.json
 query.txt
 
+/jwt-auth/ambassador
+/jwt-auth/ambassador_values.yaml
+
 # local env files
 .env.local
 .env.*.local

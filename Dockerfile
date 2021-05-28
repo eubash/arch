@@ -10,4 +10,4 @@ ENV NODE_ENV=development
 
 RUN yarn install
 
-ENTRYPOINT node ./server.js
+ENTRYPOINT node ./server-reg.js

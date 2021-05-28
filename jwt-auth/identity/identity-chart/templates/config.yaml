@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "identity-chart.fullname" . }}-secret
+type: Opaque
+data:
+  DATABASE_URI: {{ printf "mongodb://%s:%s@%s:%s/%s" .Values.externalMongodb.mongodbUsername .Values.externalMongodb.mongodbPassword .Values.externalMongodb.mongodbHost .Values.externalMongodb.mongodbPort .Values.externalMongodb.mongodbDatabaseName | b64enc | quote }}

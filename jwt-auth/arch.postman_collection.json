@@ -1,0 +1,826 @@
+{
+	"info": {
+		"_postman_id": "05f0c83d-762b-4ef7-8c32-aa9a3282e794",
+		"name": "arch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "REGISTER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"var fUId = pm.environment.get('firstUserId');",
+							"",
+							"if(res && res.user && !fUId)",
+							"{",
+							"pm.environment.set('firstUserId', res.userId);",
+							"}",
+							"",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Register user\", function () {",
+							"  pm.expect(res.message).to.eql(\"User was successfully registered\");",
+							"  pm.expect(res.userId).to.eql(res.user._id);",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');",
+							"const userName = `New user ${genRanHex(12)}`;",
+							"const firstName = `User firstName ${genRanHex(8)}`;",
+							"const lastName = `User lastName ${genRanHex(6)}`;",
+							"const email = `somemail${genRanHex(6)}@mail.ru`;",
+							"const password = `pass${genRanHex(18)}`;",
+							"",
+							"pm.environment.set('baseUrl', \"http://arch.homework\");",
+							"pm.environment.set('username', userName);",
+							"pm.environment.set('firstName', firstName);",
+							"pm.environment.set('lastName', lastName);",
+							"pm.environment.set('email', email);",
+							"pm.environment.set('password', password);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST GET NOT LOGGED USER",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 401 - user not authorized\", function () {",
+							"  pm.expect(res.code).to.eql(401);",
+							"});",
+							"",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/me",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"if(res)",
+							"{",
+							"pm.environment.set('archToken', res.token);",
+							"}",
+							"",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Response contain token\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"token\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "USER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"if(res && res.user)",
+							"{",
+							"pm.environment.set('userId', res.user.id);",
+							"}",
+							"",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Response contain user\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"user\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/me",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AUTH",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"User is authorized\", function () {",
+							"  pm.expect(res.message).to.eql(\"Authorized user\");",
+							"});",
+							"",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "USERS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Response contain user list\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"users\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "USER BY ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Response contain user\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"user\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.url);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MODIFY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"User was updated\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"user\");",
+							"  pm.expect(res.message).to.eql(\"User was successfully updated\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.url);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');",
+							"const userName = `New user ${genRanHex(18)}`;",
+							"const firstName = `User firstName ${genRanHex(38)}`;",
+							"const lastName = `User lastName ${genRanHex(48)}`;",
+							"",
+							"pm.environment.set('username', userName);",
+							"pm.environment.set('firstName', firstName);",
+							"pm.environment.set('lastName', lastName);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MODIFY ME",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"User was updated\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"user\");",
+							"  pm.expect(res.message).to.eql(\"User was successfully updated\");",
+							"});",
+							"",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/me",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGOUT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST GET NOT LOGGED USER BY ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 401 - user not authorized\", function () {",
+							"  pm.expect(res.code).to.eql(401);",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.url);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REGISTER SECOND USER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Register user\", function () {",
+							"  pm.expect(res.message).to.eql(\"User was successfully registered\");",
+							"  pm.expect(res.userId).to.eql(res.user._id);",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');",
+							"const userName = `New user ${genRanHex(12)}`;",
+							"const firstName = `User firstName ${genRanHex(8)}`;",
+							"const lastName = `User lastName ${genRanHex(6)}`;",
+							"const email = `somemail${genRanHex(6)}@mail.ru`;",
+							"const password = `pass${genRanHex(18)}`;",
+							"",
+							"pm.environment.set('baseUrl', \"http://arch.homework\");",
+							"pm.environment.set('username', userName);",
+							"pm.environment.set('firstName', firstName);",
+							"pm.environment.set('lastName', lastName);",
+							"pm.environment.set('email', email);",
+							"pm.environment.set('password', password);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGIN SECOND USER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"if(res)",
+							"{",
+							"pm.environment.set('archToken', res.token);",
+							"}",
+							"",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"Response contain token\", function () {",
+							"  pm.expect(pm.response.text()).to.include(\"token\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TRY TO GET FIRST USER DATA BY ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"pm.test(\"Response code is 401 - user not authorized\", function () {",
+							"  pm.expect(res.code).to.eql(401);",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.url);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{firstUserId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGOUT SECOND USER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{archToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

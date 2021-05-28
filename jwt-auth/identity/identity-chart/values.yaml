@@ -1,0 +1,24 @@
+replicaCount: 1
+
+fullnameOverride: "identity"
+
+image: eubash/arch-healthcheck:1.1.3
+
+service:
+  type: NodePort
+  port: 9000
+
+externalMongodb:
+  mongodbUsername: superuser
+  mongodbPassword: somepass
+  mongodbDatabase: mongodb
+  mongodbDatabaseName: someapp
+  mongodbHost: "mongo-db"
+  mongodbPort: "27017"
+
+ingress:
+  enabled: false
+  hosts:
+    - host: arch.homework
+      paths: ["/login", "/register", "/logout"]
+
