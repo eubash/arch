@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "7aaa744c-2505-4332-861c-d55e9714dc95",
+		"name": "Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "REGISTER",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');",
+							"const userName = `New user ${genRanHex(12)}`;",
+							"const firstName = `User firstName ${genRanHex(8)}`;",
+							"const lastName = `User lastName ${genRanHex(6)}`;",
+							"const email = `somemail${genRanHex(6)}@mail.ru`;",
+							"const password = `pass${genRanHex(18)}`;",
+							"const companyName = `company${genRanHex(4)}`;",
+							"const address = `address${genRanHex(6)}`;",
+							"const city = `city${genRanHex(8)}`;",
+							"const country = `country${genRanHex(2)}`;",
+							"",
+							"pm.environment.set('baseUrl', \"http://arch.homework\");",
+							"pm.environment.set('username', userName);",
+							"pm.environment.set('firstName', firstName);",
+							"pm.environment.set('lastName', lastName);",
+							"pm.environment.set('email', email);",
+							"pm.environment.set('password', password);",
+							"pm.environment.set('companyName', companyName);",
+							"pm.environment.set('address', address);",
+							"pm.environment.set('city', city);",
+							"pm.environment.set('country', country);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"if(res)",
+							"{",
+							"pm.environment.set('billingAccountId', res.billingAccountId);",
+							"}",
+							"",
+							"pm.test(\"Response code is 200\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"});",
+							"pm.test(\"TEST Register user with billing account created\", function () {",
+							"  pm.expect(res.message).to.eql(\"User was successfully registered\");",
+							"  pm.expect(res.userId).to.eql(res.user._id);",
+							"  pm.expect(res).to.have.property(\"billingAccountId\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\",\n    \"companyName\": \"{{companyName}}\",\n    \"address\": \"{{address}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE ORDER",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');",
+							"const price = Math.floor(Math.random() * 16);",
+							"const idKey = pm.variables.get(\"idempotencyKey\") + Math.floor(Math.random() * 16);",
+							"",
+							"pm.environment.set('price', price);",
+							"pm.environment.set('idempotencyKey', idKey);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Order successfully created\", function () {",
+							"  pm.expect(res.code).to.eql(200);",
+							"  pm.expect(res.message).to.eql(\"Order was successfully created\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "idempotency-Key",
+						"value": "{{idempotencyKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"price\": {{price}},\n    \"currency\": \"Euro\", \n    \"billingId\": \"{{billingAccountId}}\",\n    \"idempotencyKey\": \"{{idempotencyKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE EXISTING ORDER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Order is present - responce 409\", function () {",
+							"  pm.expect(res.code).to.eql(409);",
+							"  pm.expect(res.message).to.eql(\"Order is already created\");",
+							"});",
+							"",
+							"console.log(\"Request body\", pm.request.body);",
+							"console.log(\"Response body\", res);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "idempotency-Key",
+						"value": "sdfgh45678olkhgfdsslew",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"price\": {{price}},\n    \"currency\": \"Euro\", \n    \"billingId\": \"{{billingAccountId}}\",\n    \"idempotencyKey\": \"{{idempotencyKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ORDERS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "idempotencyKey",
+			"value": "01sdfoiusdfg543lkjhgfwed345"
+		}
+	]
+}

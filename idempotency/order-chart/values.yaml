@@ -1,0 +1,33 @@
+# Default values for helm-manifests.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image: eubash/arch-order:1.0.0
+
+service:
+  type: NodePort
+  port: 8000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: ["/"]
+
+config:
+  name: arch-config
+
+secret:
+  name: arch-secret
+
+externalMongodb:
+  mongodbUsername: superuser
+  mongodbPassword: somepass
+  mongodbDatabase: mongodb
+  mongodbDatabaseName: someapp
+  mongodbHost: "mongo-db"
+  mongodbPort: "27017"
+
+
