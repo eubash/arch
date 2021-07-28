@@ -10,4 +10,4 @@ ENV NODE_ENV=development
 
 RUN yarn install
 
-ENTRYPOINT node ./order-service/orderService.js
+ENTRYPOINT node ./payment-service/paymentService.js

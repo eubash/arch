@@ -2,9 +2,9 @@ version: '3.7'
 services:
 
   arch:
-    image: eubash/arch-order:1.0.0
+    image: eubash/arch-payment-service:1.0.0
     build: . #./Dockerfile
     ports:
-      - "8000:80"
+      - "8000:90"
     restart: always
     env_file: .env
