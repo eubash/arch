@@ -1,0 +1,9 @@
+export const configuration = {
+  DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
+  DATABASE_USERNAME: process.env.DATABASE_USERNAME,
+  DATABASE_NAME: process.env.DATABASE_NAME,
+  DATABASE_HOST: process.env.DATABASE_HOST,
+  DATABASE_PORT: process.env.DATABASE_PORT,
+  DATABASE_URI: process.env.DATABASE_URI,
+  MYSQL_DATABASE_URI: process.env.MYSQL_DATABASE_URI
+}

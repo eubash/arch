@@ -1,0 +1,15 @@
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  annotations:
+#    kubernetes.io/ingress.class: ambassador
+#  name: virtual-host-ingress
+#spec:
+#  rules:
+#    - host: backend.api
+#      http:
+#        paths:
+#          - path: /whoAmI
+#            backend:
+#              serviceName: auth-service
+#              servicePort: 8000

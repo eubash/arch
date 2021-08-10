@@ -1,0 +1,14 @@
+#apiVersion: getambassador.io/v2
+#kind: Filter
+#metadata:
+#  name: "external-filter"
+#spec:
+#  External:
+#    auth_service: "auth-service:8000"
+#    tls: false
+#    proto: http
+#    status_on_error:
+#      code: 403
+#    failure_mode_allow: false
+#    # proto: http only
+#    path_prefix: "/"

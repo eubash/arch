@@ -1,0 +1,9 @@
+apiVersion: getambassador.io/v2
+kind:  Mapping
+metadata:
+  name:  user-mapping
+spec:
+  prefix: /users/
+  host: product.configurator
+  service: user-service:8000
+  rewrite: "/someawesomehash/"

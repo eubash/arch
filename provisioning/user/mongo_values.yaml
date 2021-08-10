@@ -1,0 +1,13 @@
+nameOverride: mongo-d
+fullnameOverride: mongo-db
+
+auth:
+  username: superuser
+  password: somepass
+  database: someapp
+
+externalAccess:
+  enabled: true
+
+service:
+  type: LoadBalancer
