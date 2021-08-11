@@ -1,0 +1,42 @@
+# Default values for helm-manifests.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+fullnameOverride: "product-service"
+
+image: eubash/configurator-product-service:1.0.0
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: product.service
+      paths: /
+
+config:
+  name: configurator-product-config
+
+secret:
+  name: configurator-product-secret
+
+externalMongodb:
+  mongodbUsername: superuser
+  mongodbPassword: somepass
+  mongodbDatabase: mongodb
+  mongodbDatabaseName: someapp
+  mongodbHost: "mongo-db"
+  mongodbPort: "27017"
+
+externalMySQLdb:
+  dbUsername: admin
+  dbPassword: 2PPHDtAPB7
+  dbDatabaseName: articulates
+  dbHost: "mysql-db"
+  dbPort: "3306"
+
+

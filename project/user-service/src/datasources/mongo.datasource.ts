@@ -3,7 +3,6 @@ import {juggler} from '@loopback/repository';
 import {configuration} from "../config";
 
 //Change DB url to: configuration.DATABASE_URI - get from environment
-//Url per i test in locale: `mongodb+srv://remago:Remago12345@remago.4anw3.azure.mongodb.net/remago?retryWrites=true&w=majority`
 
 const config = {
   'name': 'mongo',

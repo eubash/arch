@@ -1,14 +1,15 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-import {configuration} from "../config";
+import {configuration} from "../configuration";
 
 //Change DB url to: configuration.DATABASE_URI - get from environment
-//Url per i test in locale: `mongodb+srv://remago:Remago12345@remago.4anw3.azure.mongodb.net/remago?retryWrites=true&w=majority`
+
+const connectionUrl = configuration.DATABASE_URI ? configuration.DATABASE_URI : `mongodb+srv://remago:Remago12345@remago.4anw3.azure.mongodb.net/remago?retryWrites=true&w=majority`;
 
 const config = {
   'name': 'mongo',
   'connector': 'mongodb',
-  'url': configuration.DATABASE_URI,
+  'url': connectionUrl,
   'useNewUrlParser': true,
   'useUnifiedTopology': true
 };

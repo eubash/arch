@@ -43,6 +43,11 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.config.name }}
                   key: USER_SERVICE_BASE_URL
+            - name: PRODUCT_SERVICE_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.config.name }}
+                  key: PRODUCT_SERVICE_BASE_URL
           ports:
             - containerPort: 3000
           livenessProbe:

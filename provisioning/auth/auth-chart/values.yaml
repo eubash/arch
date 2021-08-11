@@ -6,7 +6,7 @@ replicaCount: 2
 
 fullnameOverride: "auth-service"
 
-image: eubash/configurator-auth-service:1.0.5
+image: eubash/configurator-auth-service:1.0.6
 
 service:
   type: NodePort
@@ -16,7 +16,14 @@ ingress:
   enabled: true
   hosts:
     - host: api.service
-      paths: ["/login", "/signup", "/whoAmI", "/users"]
+      paths: ["/login",
+              "/signup",
+              "/whoAmI",
+              "/users",
+              "/companies",
+              "/articulates",
+              "/price",
+              "/user-configurations"]
 
 config:
   name: configurator-config
