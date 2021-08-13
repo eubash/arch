@@ -7,7 +7,7 @@ data:
   DATABASE_USER: superuser
   DATABASE_PASSWORD: somepass
   USER_SERVICE_BASE_URL: 'http://192.168.99.115:8000'
-  PRODUCT_SERVICE_BASE_URL: 'http://192.168.99.115:8000'
+  PRODUCT_SERVICE_BASE_URL: 'http://192.168.99.115:9000'
 ---
 apiVersion: v1
 kind: Secret

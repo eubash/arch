@@ -1,0 +1,13 @@
+.text-divider {
+  margin: 16px 0;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 12px;
+  color: #ddd;
+  .v-divider {
+    border-color:  #ddd;
+  }
+  .row {
+    margin: 0;
+  }
+}

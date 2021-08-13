@@ -1,0 +1,41 @@
+.v-dialog {
+  &.fullscreen { // alt fullscreen behavior
+    width: 100%;
+    margin: 15px;
+    @include media-breakpoint-up(sm) {
+      width: 90%;
+    }
+    @include media-breakpoint-up(md) {
+      width: 75%;
+      max-width: 900px;
+    }
+    @include media-breakpoint-up(lg) {
+      width: 75%;
+    }
+  }
+
+  &.card {
+    .v-card__title {
+      padding: 28px 32px !important;
+      background-color: var(--v-secondary-lighten5);
+      border-bottom: 1px solid var(--v-secondary-lighten3);
+      h3 {
+        //@include h3();
+        color: var(--v-secondary-darken4);
+      }
+    }
+    .v-card__text {
+      padding: 32px;
+    }
+    .v-card__actions {
+      padding: 28px 32px !important;
+      background-color: var(--v-secondary-lighten5);
+      border-top: 1px solid var(--v-secondary-lighten3);
+    }
+  }
+
+  // specific dialog
+  &.start-dialog {
+    max-width: 600px !important;
+  }
+}

@@ -1,0 +1,17 @@
+nameOverride: mysqldb
+fullnameOverride: mysqldb
+clusterDomain: mysql.local
+
+auth:
+  rootPassword: 2PPHDtAPB7
+  database: articulates
+  username: admin
+  password: 2PPHDtAPB7
+
+
+primary:
+  service:
+    type: LoadBalancer
+    loadBalancerIP: 192.168.99.115
+  persistence:
+    enabled: false

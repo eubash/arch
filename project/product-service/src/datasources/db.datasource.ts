@@ -2,7 +2,6 @@ import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 import {configuration} from "../config";
 
-//Local test url: 'mysql://admin:2PPHDtAPB7@localhost/articulates'
 //Real DB URI: configuration.MYSQL_DATABASE_URI
 
 const config = {

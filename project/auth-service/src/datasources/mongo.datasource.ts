@@ -4,7 +4,7 @@ import {configuration} from "../configuration";
 
 //Change DB url to: configuration.DATABASE_URI - get from environment
 
-const connectionUrl = configuration.DATABASE_URI ? configuration.DATABASE_URI : `mongodb+srv://remago:Remago12345@remago.4anw3.azure.mongodb.net/remago?retryWrites=true&w=majority`;
+const connectionUrl = configuration.DATABASE_URI ? configuration.DATABASE_URI : "";
 
 const config = {
   'name': 'mongo',

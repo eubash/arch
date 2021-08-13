@@ -10,13 +10,13 @@ image: eubash/configurator-product-service:1.0.0
 
 service:
   type: LoadBalancer
-  port: 8000
+  port: 9000
 
 ingress:
   enabled: true
   hosts:
     - host: product.service
-      paths: /
+      paths: ["/"]
 
 config:
   name: configurator-product-config
@@ -36,7 +36,7 @@ externalMySQLdb:
   dbUsername: admin
   dbPassword: 2PPHDtAPB7
   dbDatabaseName: articulates
-  dbHost: "mysql-db"
+  dbHost: "172.17.0.9:3306"
   dbPort: "3306"
 
 

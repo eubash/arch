@@ -1,0 +1,69 @@
+@import "./base/variables";
+@import "./utilities/_breakpoints.scss";
+
+
+@import "./base/reset";
+@import "./base/inputs";
+@import "components/dialog";
+@import "components/table";
+@import "components/text-divider";
+@import "./pages/auth";
+@import "./utilities/_mixins.scss";
+
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.notifications {
+  .vue-notification {
+    padding: 16px;
+    margin: 16px 0 0 0;
+
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.npy{
+  .col,[class*="col-"] {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.hide-details {
+  .v-input__slot {
+    margin: 0;
+  }
+  .v-text-field__details {
+    display: none;
+  }
+  .v-messages {
+    display: none;
+  }
+}
+
+.configuration {
+  section {
+    margin-top: 40px;
+  }
+  h3 {
+    margin-bottom: 16px;
+  }
+}
+
+h2 {
+  color: white !important;
+}
+
+.v-snack__wrapper {
+  background-color: #4990e2 !important;
+}

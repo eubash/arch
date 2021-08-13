@@ -1,0 +1,94 @@
+.v-data-table__empty-wrapper {
+  .v-alert {
+    margin: auto;
+    max-width: 350px;
+  }
+}
+
+.table-helper {
+  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.05);
+  th{
+    color: var(--v-secondary-base) !important;
+    background-color: var(--v-secondary-lighten5);
+    border-color: var(--v-secondary-lighten3) !important;
+    line-height: 48px;
+    white-space: nowrap;
+    i {
+      font-size: 18px !important;
+      margin-bottom: 7px !important;
+    }
+    .v-select {
+      color: var(--v-secondary-base) !important;
+      margin-top: 0;
+      .v-select__selection {
+        color: var(--v-secondary-base);
+        font-size: 12px;
+      }
+      .v-label {
+        color: var(--v-secondary-base);
+      }
+      .v-icon {
+        color: var(--v-secondary-base);
+      }
+      .v-input__slot{
+        margin: 0;
+        &:before {
+          border-color: var(--v-secondary-base) !important;
+        }
+      }
+    }
+  }
+  tbody{
+    tr:nth-child(even) {
+      background-color: var(--v-secondary-lighten5);
+    }
+    td {
+      border-color: var(--v-secondary-lighten3) !important;
+      height: 80px !important;
+      a {
+
+      }
+    }
+  }
+  table {
+    border-top: 1px solid var(--v-secondary-lighten3);
+  }
+  .v-data-footer{
+    color: var(--v-secondary-darken2);
+    background-color: var(--v-secondary-lighten5);
+    border-color: var(--v-secondary-lighten3) !important;
+    font-size: 12px;
+    line-height: 16px;
+    padding:10px 0;
+  }
+  .v-avatar {
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
+  }
+  .actions{
+    &.icons {
+      i{
+        font-size: 17px;
+      }
+    }
+  }
+  &.v-data-table--has-top {
+    & > div:first-child {
+      padding: 24px;
+      //background-color: var(--v-secondary-lighten5);
+      //border-bottom: 1px solid var(--v-secondary-lighten3);
+      .search {
+        margin-top: 25px;
+        @include media-breakpoint-up(sm) {
+          width: 50%;
+        }
+      }
+      .v-input__slot {
+        margin: 0;
+        background-color: white;
+      }
+      .v-text-field__details {
+        display: none;
+      }
+    }
+  }
+}
