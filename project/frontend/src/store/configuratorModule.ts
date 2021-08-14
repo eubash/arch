@@ -1,11 +1,14 @@
 import { MutationTree, ActionTree, ActionContext, GetterTree } from "vuex";
 import { RootState } from "./index";
-import UserConfiguration from "@/services/configService";
+import {UserConfiguration, Company, Articulate} from "@/services/configurationService";
 
 
 export interface ConfiguratorState {
   configuration: UserConfiguration;
   configurationList: UserConfiguration[];
+  company: Company | undefined;
+  companyList: Company[];
+  articulatesList: Articulate[];
 }
 
 type ConfiguratorContext = ActionContext<ConfiguratorState, RootState>;
@@ -13,16 +16,28 @@ type ConfiguratorContext = ActionContext<ConfiguratorState, RootState>;
 export const namespaced = true;
 
 export const state = (): ConfiguratorState => ({
+  articulatesList: [],
+  companyList: [],
+  company: undefined,
   configurationList: [],
   configuration: {
-    id: undefined,
     configurationName: "New configuration",
     userId: undefined,
-    companyId: 1,
-    configuration: {
+    companyId: undefined,
+    configuration: [
+      {
       productId: 1,
       quantity: 1
-    }
+    },
+      {
+        productId: 2,
+        quantity: 1
+      },
+      {
+        productId: 3,
+        quantity: 1
+      }
+    ]
   }
 });
 
@@ -32,7 +47,16 @@ export const getters: GetterTree<ConfiguratorState, RootState> = {
   },
   configurationList: (state) => {
     return state.configurationList;
-  }
+  },
+  company: (state) => {
+    return state.company;
+  },
+  companyList: (state) => {
+    return state.companyList;
+  },
+  articulatesList: (state) => {
+    return state.articulatesList;
+  },
 };
 
 export const mutations: MutationTree<ConfiguratorState> = {
@@ -50,6 +74,15 @@ export const mutations: MutationTree<ConfiguratorState> = {
         return conf.id !== configurationId;
       })
   },
+  setCompany(state: ConfiguratorState, company: Company) {
+    state.company = company;
+  },
+  setCompanyList(state: ConfiguratorState, companyList: Company[]) {
+    state.companyList = companyList;
+  },
+  setArticulatesList(state: ConfiguratorState, articulatesList: Articulate[]) {
+    state.articulatesList = articulatesList;
+  }
 };
 
 export const actions: ActionTree<ConfiguratorState, RootState> = {

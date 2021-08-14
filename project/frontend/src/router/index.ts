@@ -51,18 +51,6 @@ const routes: Array<RouteConfig> = [
       },
     ]
   },
-  // {
-  //   path: "/configurator",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/Configurations.vue"),
-  //   meta: {
-  //     auth: true,
-  //   },
-  // },
 ];
 
 const router = new VueRouter({
@@ -92,11 +80,9 @@ router.beforeEach(async (to, from, next) => {
   const { user } = store.state.session;
   const shouldRecoverUser = tokenData && !user;
   if (user) {
-    debugger;
     return next();
   }
   if (shouldRecoverUser) {
-    debugger;
     const res = await recoverUserFromCookies(tokenData);
     if (res) {
       return next();
@@ -105,11 +91,9 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   if (needAuth) {
-    debugger;
     //return next("/auth/signin");
     return next("/signin");
   } else {
-    debugger;
     return next();
   }
 });

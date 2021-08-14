@@ -3,7 +3,10 @@
     {{ notification.message }}
     <template v-slot:action="{ attrs }">
       <v-btn text v-bind="attrs" @click="onDismiss">
-        <i class="mdi-remove-circle"></i>
+<!--        <i class="mdi-remove-circle"></i>-->
+        <v-icon>
+          mdi-remove-circle
+        </v-icon>
       </v-btn>
     </template>
   </v-snackbar>

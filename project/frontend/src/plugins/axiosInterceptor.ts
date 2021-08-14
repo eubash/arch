@@ -33,7 +33,7 @@ export default function start(): void {
       }
       if (error.response.status === 401) {
         store.dispatch("session/logout");
-        router.push("/auth");
+        router.push("/");
       }
       return Promise.reject(error);
     }

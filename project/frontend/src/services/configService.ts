@@ -15,6 +15,12 @@ export default {
   configurator: {
     getConfigurationsUrl(): string {
       return `${API_BASE_URL}/user-configurations`;
+    },
+    getCompaniesUrl(): string {
+      return `${API_BASE_URL}/companies`;
+    },
+    getArticulatesUrl(): string {
+      return `${API_BASE_URL}/articulates`;
     }
   },
   // admin: {
