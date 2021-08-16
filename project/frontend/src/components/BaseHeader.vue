@@ -3,6 +3,7 @@
     <v-row no-gutters class="d-flex" justify="space-around">
       <v-col cols="3">
         <v-img
+          style="z-index: 99"
           :src="require('../assets/images/logo.svg')"
           class="my-3"
           contain

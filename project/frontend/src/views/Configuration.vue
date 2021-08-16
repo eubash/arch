@@ -1,11 +1,14 @@
 <template>
   <v-container class="configurations-page">
     <v-row no-gutters fill-height>
-      <v-col cols="8" class="px-10">
-        <h3 style="color: #9DE6FD;">Product preview</h3>
+      <v-col cols="8" class="">
+        <h3 style="color: #9DE6FD;">{{company ? company.name : "Your"}} room configuration preview</h3>
+        <div style="width: 100%; height: 100%;">
+          <iframe src="https://momento360.com/e/uc/38c87ec9e65349118b2132b287ac5d4f?utm_campaign=marketingsite&amp;utm_source=www&amp;size=large&amp;pan-speed=.035&amp;reset-heading=false&amp;hide-cardboard=true&amp;autoplay-collection=true&amp;ap-interval-coll=5&amp;fade=1000 " frameborder="0" allowfullscreen="" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+        </div>
       </v-col>
-      <v-col cols="4" class="px-10" style="border-left: 1px solid #4990e2;">
-        <h3 style="color: #9DE6FD;" class="mb-6">Configure your room:</h3>
+      <v-col cols="4" class="pa-10" style="border-left: 1px solid #4990e2; background-color: rgba(24, 50, 84, 0.9); z-index: 99">
+        <h3 style="color: #9DE6FD;" class="mb-6">Configure your {{company ? company.name : ""}} room:</h3>
         <v-text-field
           v-model="configuration.configurationName"
           label="Insert your configuration name"
@@ -50,7 +53,11 @@
 import Vue from "vue";
 import ConfigurationService from "@/services/configurationService";
 import store from "@/store";
-import {Articulate, Configuration} from "@/services/configurationService";
+import {Articulate, Configuration, Company, UserConfiguration} from "@/services/configurationService";
+
+interface CurrentConfiguration extends Articulate {
+  currentQuantity: number;
+}
 
 export default Vue.extend({
   name: "Configuration",
@@ -63,22 +70,34 @@ export default Vue.extend({
       await this.getUserConfiguration();
     }
     if(this.configuration.companyId) {
-      await this.getArticulatesList();
+      await this.getArticulatesList(this.configuration.companyId);
     }
   },
   computed: {
     user() {
       return store.getters["session/user"];
     },
-    configuration() {
+    company(): Company {
+      const companyList = store.getters["configurator/companyList"];
+      if(companyList.length === 0) {
+        this.getCompanyList();
+      }
+      if(this.configuration?.companyId) {
+        const i = companyList.findIndex((company: Company) => company.id === this.configuration?.companyId);
+        console.log("Index", i);
+        return companyList[i];
+      }
+      return store.getters["configurator/company"];
+    },
+    configuration(): UserConfiguration {
       return store.getters["configurator/configuration"];
     },
-    articulatesList() {
+    articulatesList(): Articulate[] {
       return store.getters["configurator/articulatesList"];
     },
-    currentConfiguration() {
-      let currentUserConfiguration = [];
-      if(this.configuration.configuration.length > 0 && this.articulatesList.length > 0) {
+    currentConfiguration(): CurrentConfiguration[] {
+      let currentUserConfiguration = [] as CurrentConfiguration[];
+      if(this.configuration.configuration && this.configuration.configuration?.length > 0 && this.articulatesList?.length > 0) {
         currentUserConfiguration = this.configuration.configuration.map((item: Configuration) => {
           const arr = this.articulatesList.filter((articulate: Articulate) => item.productId === articulate.productId);
           return {...arr[0], ...{currentQuantity: item.quantity}};
@@ -87,10 +106,10 @@ export default Vue.extend({
       console.log(currentUserConfiguration);
       return currentUserConfiguration;
      },
-    currentPrice() {
-      return this.currentConfiguration.reduce((a, c) => a + (c.price * c.currentQuantity), 0);
+    currentPrice(): number {
+      return this.currentConfiguration.reduce((a: number, c: CurrentConfiguration) => a + (c.price * c.currentQuantity), 0);
     },
-    currency() {
+    currency(): string {
       return this.currentConfiguration.length > 0 ? this.currentConfiguration[0].currency : "";
     }
   },
@@ -103,9 +122,9 @@ export default Vue.extend({
         console.error(e);
       }
     },
-    async getArticulatesList() {
+    async getArticulatesList(companyId: number) {
       try {
-        const articulatesList = await ConfigurationService.getArticulatesList(this.configuration.companyId);
+        const articulatesList = await ConfigurationService.getArticulatesList(companyId);
         store.commit("configurator/setArticulatesList", articulatesList);
       } catch(e) {
         this.$store.dispatch("notifications/displayNotification", {
@@ -131,9 +150,20 @@ export default Vue.extend({
         });
       }
     },
-    getCurrentPrice(): number {
+    getCurrentPrice(): void {
       this.price = this.currentConfiguration.reduce((a, c) => a + (c.price * c.currentQuantity), 0);
-    }
+    },
+    async getCompanyList() {
+      try {
+        const companies = await ConfigurationService.getCompanyList();
+        store.commit("configurator/setCompanyList", companies);
+      } catch(e) {
+        this.$store.dispatch("notifications/displayNotification", {
+          type: "error",
+          message: "Something went wrong. Try later."
+        });
+      }
+    },
   }
 });
 </script>

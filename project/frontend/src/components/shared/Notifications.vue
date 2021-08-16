@@ -1,11 +1,13 @@
 <template>
-  <v-snackbar v-model="displayNotification" :timeout="-1" :multi-line="true">
+  <v-snackbar v-model="displayNotification" :timeout="-1" :multi-line="true" color="primary">
+    <v-icon class="mr-3">
+      {{iconClass}}
+    </v-icon>
     {{ notification.message }}
     <template v-slot:action="{ attrs }">
       <v-btn text v-bind="attrs" @click="onDismiss">
-<!--        <i class="mdi-remove-circle"></i>-->
         <v-icon>
-          mdi-remove-circle
+          mdi-close-circle
         </v-icon>
       </v-btn>
     </template>
@@ -25,15 +27,13 @@ export default Vue.extend({
     iconClass(): string {
       switch (this.notification.type) {
         case "info":
-          return `info--text mdi-info-outline mr-3`;
+          return `mdi-alert-circle-outline`;
         case "success":
-          return `success--text uis uis-check-circle mr-3`;
+          return `mdi-check-all`;
         case "warning":
-          return `warning--text uis-exclamation-triangle mr-3`;
+          return `mdi-account-alert-outline`;
         case "error":
-          return `error--text mdi-warning-circle mr-3`;
-        case "primary":
-          return `info--text uis-info-circle mr-3`;
+          return `mdi-alert-circle-outline`;
         default:
           return "";
       }

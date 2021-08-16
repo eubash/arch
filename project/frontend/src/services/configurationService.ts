@@ -24,7 +24,7 @@ export interface Company {
 
 export interface Configuration {
   productId?: number;
-  quantity?: number;
+  quantity: number;
 }
 
 export interface UserConfiguration {
@@ -60,7 +60,7 @@ export default {
     const res = await axios.get(`${configService.configurator.getCompaniesUrl()}`);
     return res.data;
   },
-  async getArticulatesList(companyId: string): Promise<Articulate[]> {
+  async getArticulatesList(companyId: number): Promise<Articulate[]> {
     const res = await axios.get(`${configService.configurator.getArticulatesUrl()}?companyId=${companyId}`);
     return res.data;
   },
