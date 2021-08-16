@@ -15,6 +15,11 @@ export interface Articulate {
   name: string;
 }
 
+export interface CurrentConfiguration extends Articulate {
+  currentQuantity: number;
+  isEnabled?: boolean
+}
+
 export interface Company {
   id: number;
   code: string;
@@ -25,6 +30,7 @@ export interface Company {
 export interface Configuration {
   productId?: number;
   quantity: number;
+  isEnabled?: boolean;
 }
 
 export interface UserConfiguration {

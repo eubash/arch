@@ -1,6 +1,6 @@
 import { MutationTree, ActionTree, ActionContext, GetterTree } from "vuex";
 import { RootState } from "./index";
-import {UserConfiguration, Company, Articulate} from "@/services/configurationService";
+import {UserConfiguration, Company, Articulate, CurrentConfiguration, Configuration} from "@/services/configurationService";
 
 
 export interface ConfiguratorState {
@@ -11,6 +11,29 @@ export interface ConfiguratorState {
   articulatesList: Articulate[];
 }
 
+const initConfiguration = {
+  configurationName: "New configuration",
+  userId: undefined,
+  companyId: undefined,
+  configuration: [
+    {
+      productId: 1,
+      quantity: 1,
+      isEnabled: true
+    },
+    {
+      productId: 2,
+      quantity: 1,
+      isEnabled: true
+    },
+    {
+      productId: 3,
+      quantity: 1,
+      isEnabled: true
+    }
+  ]
+};
+
 type ConfiguratorContext = ActionContext<ConfiguratorState, RootState>;
 
 export const namespaced = true;
@@ -20,25 +43,7 @@ export const state = (): ConfiguratorState => ({
   companyList: [],
   company: undefined,
   configurationList: [],
-  configuration: {
-    configurationName: "New configuration",
-    userId: undefined,
-    companyId: undefined,
-    configuration: [
-      {
-      productId: 1,
-      quantity: 1
-    },
-      {
-        productId: 2,
-        quantity: 1
-      },
-      {
-        productId: 3,
-        quantity: 1
-      }
-    ]
-  }
+  configuration: initConfiguration
 });
 
 export const getters: GetterTree<ConfiguratorState, RootState> = {
@@ -60,6 +65,9 @@ export const getters: GetterTree<ConfiguratorState, RootState> = {
 };
 
 export const mutations: MutationTree<ConfiguratorState> = {
+  clearConfiguration(state: ConfiguratorState) {
+    state.configuration = initConfiguration;
+  },
   setConfiguration(state: ConfiguratorState, configuration: UserConfiguration) {
     state.configuration = configuration;
   },
@@ -82,7 +90,17 @@ export const mutations: MutationTree<ConfiguratorState> = {
   },
   setArticulatesList(state: ConfiguratorState, articulatesList: Articulate[]) {
     state.articulatesList = articulatesList;
-  }
+  },
+  patchConfigurationItem(state: ConfiguratorState, cConfItem: CurrentConfiguration) {
+    state.configuration.configuration = state.configuration.configuration ? state.configuration.configuration.map((item: Configuration) => {
+      if(item.productId === cConfItem.productId) {
+        item.isEnabled = cConfItem.isEnabled;
+        item.quantity = cConfItem.currentQuantity;
+        return item;
+      }
+      return item;
+    }) : state.configuration.configuration;
+  },
 };
 
 export const actions: ActionTree<ConfiguratorState, RootState> = {

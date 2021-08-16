@@ -1,7 +1,7 @@
 apiVersion: getambassador.io/v2
 kind:  Mapping
 metadata:
-  name:  user-mapping
+  name:  product-mapping
 spec:
   prefix: /
-  service: user-service:8000
+  service: product-service:8000
