@@ -29,7 +29,7 @@
               ticks
               :max="item.max_value"
               :min="item.min_Value"
-              @change="getCurrentPrice"
+              @change="getCurrentPrice(item)"
             ></v-slider>
           </div>
           <v-switch
@@ -134,12 +134,12 @@ export default Vue.extend({
   },
   methods: {
     setWidgetStatus(item: CurrentConfiguration) {
+      store.commit("configurator/patchConfigurationItem", item);
       if(item.isEnabled) {
         this.price = this.price + (item.price * item.currentQuantity);
       } else {
         this.price = this.price - (item.price * item.currentQuantity);
       }
-      store.commit("configurator/patchConfigurationItem", item);
     },
     async getUserConfiguration() {
       try {
@@ -182,7 +182,8 @@ export default Vue.extend({
         });
       }
     },
-    getCurrentPrice(): void {
+    getCurrentPrice(item: CurrentConfiguration): void {
+      if (item) store.commit("configurator/patchConfigurationItem", item);
       if (this.configuration?.id === this.$route.params.id) {
         this.price = this.currentConfiguration.reduce((a: number, c: CurrentConfiguration) => c.isEnabled ? a + (c.price * c.currentQuantity) : a, 0);
       }
